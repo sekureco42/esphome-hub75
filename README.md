@@ -1,4 +1,4 @@
-# esphome-trinity
+# esphome-hub75
 
 ## Introduction
 This project provides the necessary `ESPHome` (https://esphome.io/) component to use the fabolous Trinity ESP32 board from Brian Lough. It is used to drive so called HUB75 LED Matrix panels.
