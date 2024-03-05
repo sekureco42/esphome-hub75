@@ -1,0 +1,136 @@
+substitutions:
+  esphome_name: ehdp01
+
+# Add own developed components to search path of esphome
+external_components:
+  - source: components
+
+esphome:
+  name: ${esphome_name}
+
+esp32:
+  board: esp32dev
+    
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_pass
+  domain: .eisenecher.private
+
+logger:
+  level: DEBUG
+
+api:
+  reboot_timeout: 60min
+  encryption:
+    key: !secret esphome_api_key
+
+ota:
+  password: !secret esphome_ota_pass
+
+sensor:
+  - platform: uptime
+    name: "${esphome_name}_Uptime Sensor"
+    
+  - platform: wifi_signal
+    name: "${esphome_name} WiFi Signal"
+    update_interval: 60s
+
+## HUB75 DISPLAY CONFIGURATION
+
+# Display needs accurate time to show clock
+time:
+  - platform: homeassistant
+    timezone: Europe/Zurich
+    id: esptime
+
+# Define assets we need for using on the display
+font:
+  # https://github.com/apparentlymart/ledpixels/blob/master/tom-thumb.bdf
+  - file: "fonts/tom-thumb.bdf"
+    id: tomthumb
+
+  # https://github.com/cmvnd/fonts
+  - file: "fonts/uushi.bdf"
+    id: uushi
+
+  # https://github.com/lubeda/EspHoMaTriXv2 - similar to "tom-thumb.bdf"
+  - file: "fonts/EHMTXv2.ttf"
+    size: 16
+    id: ehmtxv2
+    glyphs:  |
+      !?"%()+*=,-_.:°0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnÖÄÜöäüopqrstuvwxyz@<>ß§€/
+
+color:
+  - id: red
+    red: 100%
+  - id: blue
+    blue: 100%
+  - id: green
+    green: 100%
+  - id: white
+    hex: FFFFFF
+
+# Display and pages configuration  
+display:
+  platform: hub75_default
+  id: my_trinity_display
+  auto_clear_enabled: true
+
+  pages:
+  - id: page1
+    lambda: |-
+      it.print(0, 0, id(tomthumb), id(red), "Page 1 - tomthumb");
+      it.print(0, 6, id(tomthumb), id(red), "Some TEXT to display");
+      it.line(0, 25, it.get_width(), 25, id(white));
+      it.strftime(0, 27, id(tomthumb), id(white), "%Y-%m-%d %H:%M", id(esptime).now());
+  - id: page2
+    lambda: |-
+      it.print(0, 0, id(tomthumb), id(red), "Page 2 - uushi");
+      it.print(0, 6, id(uushi), id(blue), "This is page 2!");
+      it.line(0, 25, it.get_width(), 25, id(white));
+      it.strftime(0, 27, id(tomthumb), id(white), "%Y-%m-%d %H:%M", id(esptime).now());
+  - id: page3
+    lambda: |-
+      it.print(0, 0, id(tomthumb), id(red), "Page 3 - ehmtxv2");
+      it.print(0, 6, id(ehmtxv2), id(green), "THIS IS PAGE 3!");
+      it.line(0, 25, it.get_width(), 25, id(white));
+      it.strftime(0, 27, id(tomthumb), id(white), "%Y-%m-%d %H:%M", id(esptime).now());
+  - id: page4
+    lambda: |-
+      it.print(0, 0, id(tomthumb), id(red), "Page 4 - ehmtxv2");
+      it.print(0, 6, id(ehmtxv2), id(blue), "This is page 4!");
+      it.line(0, 25, it.get_width(), 25, id(white));
+      it.strftime(0, 27, id(tomthumb), id(white), "%Y-%m-%d %H:%M", id(esptime).now());
+
+# Switch automatically through all pages
+interval:
+  - interval: 10s
+    then:
+      - display.page.show_next: my_trinity_display
+
+# Enable Touchpad support (on the back of Trinity)
+esp32_touch:
+  setup_mode: false
+
+binary_sensor:
+  - platform: esp32_touch
+    id: t8_touchpad
+    name: "T8 Touchpad"
+    icon: "mdi:fingerprint"
+    pin: GPIO33
+    threshold: 600
+    internal: true # make it invisible for Home Assistant
+    on_press:
+      then:
+        - display.page.show_previous: my_trinity_display
+
+  - platform: esp32_touch
+    id: t9_touchpad
+    name: "T9 Touchpad"
+    icon: "mdi:fingerprint"
+    pin: GPIO32
+    threshold: 600
+    internal: true # make it invisible for Home Assistant
+    on_press:
+      then:
+        - display.page.show_next: my_trinity_display

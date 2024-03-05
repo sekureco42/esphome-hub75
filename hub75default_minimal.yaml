@@ -1,0 +1,50 @@
+substitutions:
+  esphome_name: ehdp01
+
+# Add own developed components to search path of esphome
+external_components:
+  - source: components
+
+esphome:
+  name: ${esphome_name}
+
+esp32:
+  board: esp32dev
+    
+wifi:
+  ssid: !secret esphome_wifi_ssid
+  password: !secret esphome_wifi_pass
+  domain: .eisenecher.private
+
+logger:
+  level: DEBUG
+
+api:
+  reboot_timeout: 60min
+  encryption:
+    key: !secret esphome_api_key
+
+ota:
+  password: !secret esphome_ota_pass
+
+sensor:
+  - platform: uptime
+    name: "${esphome_name}_Uptime Sensor"
+    
+  - platform: wifi_signal
+    name: "${esphome_name} WiFi Signal"
+    update_interval: 60s
+
+## HUB75 DISPLAY CONFIGURATION
+
+# Display needs accurate time to show clock
+time:
+  - platform: homeassistant
+    timezone: Europe/Zurich
+    id: esptime
+
+# Display configuration  
+display:
+  platform: hub75_default
+  id: my_trinity_display
+  auto_clear_enabled: false
