@@ -170,4 +170,4 @@ async def setup_hub75_display(var, config):
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
     #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "3.0.11")
