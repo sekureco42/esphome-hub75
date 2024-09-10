@@ -157,7 +157,6 @@ async def setup_hub75_display(var, config):
     if cv.Version.parse(ESPHOME_VERSION) < cv.Version.parse("2023.12.0"):
         await cg.register_component(var, config)
     await display.register_display(var, config)
-    #await light.register_light(var, config)
 
     if CONF_LAMBDA in config:
         lambda_ = await cg.process_lambda(
@@ -169,5 +168,5 @@ async def setup_hub75_display(var, config):
     cg.add_library("Wire", None)
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
 

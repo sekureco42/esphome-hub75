@@ -7,27 +7,34 @@
 #include "esphome/core/version.h"
 #include "esphome/components/display/display_buffer.h"
 
+// The esphome ESP_LOGx macros expand to reference esp_log_printf_, but do so
+// without using its namespace. https://github.com/esphome/issues/issues/3196
+// The workaround is to pull that particular function into this namespace.
+using esphome::esp_log_printf_;
+// This is needed for the underlaying library "ESP32 HUB75 LED MATRIX PANEL DMA Display"
+
 #include <ESP32-HUB75-MatrixPanel-I2S-DMA.h>
 
 namespace esphome {
 namespace hub75_base {
 
-static const Color myRED     = Color(255, 0, 0);
-static const Color myLTRED   = Color(130, 0, 0);
-static const Color myELTRED  = Color(30, 0, 0);
-static const Color myGREEN   = Color(0, 255, 0);
-static const Color myLTGREEN = Color(0, 130, 0);
-static const Color myBLUE    = Color(0, 0, 255);
-static const Color myLTBLUE  = Color(32, 64, 160);
-static const Color myELTBLUE = Color(16, 32, 64);
-static const Color myWHITE   = Color(255, 255, 255);
-static const Color myYELLOW  = Color(255, 255, 0);
-static const Color myORANGE  = Color(255, 165, 0);
-static const Color myCYAN    = Color(0, 255, 255);
-static const Color myMAGENTA = Color(255, 0, 255);
-static const Color myGRAY    = Color(102, 102, 102);
-static const Color myBLACK   = Color(0, 0, 0);
-const Color backgroundColor = myBLACK;
+static const Color COLOR_RED            = Color(255, 0, 0);
+static const Color COLOR_RED_LIGHT      = Color(130, 0, 0);
+static const Color COLOR_RED_LIGHTER    = Color(30, 0, 0);
+static const Color COLOR_GREEN          = Color(0, 255, 0);
+static const Color COLOR_GREEN_LIGHT    = Color(0, 130, 0);
+static const Color COLOR_GREEN_LIGHTER  = Color(0, 30, 0);
+static const Color COLOR_BLUE           = Color(0, 0, 255);
+static const Color COLOR_BLUE_LIGHT     = Color(32, 64, 160);
+static const Color COLOR_BLUE_LIGHTER   = Color(16, 32, 64);
+static const Color COLOR_YELLOW         = Color(255, 255, 0);
+static const Color COLOR_ORANGE         = Color(255, 165, 0);
+static const Color COLOR_CYAN           = Color(0, 255, 255);
+static const Color COLOR_MAGENTA        = Color(255, 0, 255);
+static const Color COLOR_GRAY           = Color(102, 102, 102);
+static const Color COLOR_WHITE          = Color::WHITE;
+static const Color COLOR_BLACK          = Color::BLACK;
+const Color backgroundColor             = COLOR_BLACK;
 
 class HUB75Display;
 

@@ -102,18 +102,13 @@ namespace esphome
         break;
       }
 
-      // TODO: New Matrix Library supports additional i2s speeds (HZ_8M, HZ_15M)
-      // Log i2speed
       switch (dma_display_->getCfg().i2sspeed)
       {
       // case HUB75_I2S_CFG::clk_speed::HZ_8M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M");
+      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M (is the same like HZ_10M)");
       //   break;
-      case HUB75_I2S_CFG::clk_speed::HZ_10M:
-        ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_10M");
-        break;
-      // case HUB75_I2S_CFG::clk_speed::HZ_15M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_15M");
+      // case HUB75_I2S_CFG::clk_speed::HZ_16M:
+      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_16M (is the same like HZ_15M)");
       //   break;
       case HUB75_I2S_CFG::clk_speed::HZ_20M:
         ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_20M");
@@ -171,7 +166,7 @@ namespace esphome
     void HUB75Display::update_() { 
       this->dma_display_->fillRect(0, 8, 64, 7, display::ColorUtil::color_to_565(backgroundColor));
       this->dma_display_->setCursor(0, 8);
-      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(myRED));
+      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(COLOR_RED));
 
       ESPTime now = this->time_->now();
       if (now.is_valid()) {
@@ -185,16 +180,16 @@ namespace esphome
     void HUB75Display::start_screen_() {
       this->dma_display_->setFont(&TomThumb);
       this->dma_display_->setCursor(0, 0+5);
-      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::myLTGREEN));
+      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::COLOR_GREEN_LIGHT));
       this->dma_display_->printf("-> %s Display", this->display_name_.c_str());
 
       this->dma_display_->setCursor(0, 16+8);
-      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::myELTBLUE));
+      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::COLOR_BLUE_LIGHTER));
       this->dma_display_->print("(c) 2023 by");
       this->dma_display_->setFont();
 
       this->dma_display_->setCursor(0, 24);
-      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::myLTBLUE));
+      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::COLOR_BLUE_LIGHT));
       this->dma_display_->print("sekureco42");
     }
 

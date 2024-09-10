@@ -52,6 +52,13 @@ This configuration file shows the following features:
 - Uses timer to switch between pages
 - Use of the Trinity onboard touch buttons (T8: `t8_touchpad`, T9: `t9_touchpad`). You could switch through pages of the display
 
+## Remarks
+### Maximal refresh rate
+With the config file `hub75default_minimal.yaml` you can reach up to `141` frames per second (by setting `update_interval: 5ms` in the display section). This is possible thanks to the new `ESP32 HUB75 LED MATRIX PANEL DMA Display` library version `3.x`. The old one (before `2.0.7` was used) reached only `107` frames per second.
+
+Eventhough you could achieve such a high framerate you should only "use" the rate you need. By default the value is `16ms` (leads to `63` frames per second).
+
+
 ## Additional Ideas
 This section contains Ideas and links to appropriate websites with projects which could be also interesting for you in the context of this display.
 
@@ -64,6 +71,7 @@ This section contains Ideas and links to appropriate websites with projects whic
 - Matrix Fonts: https://github.com/trip5/Matrix-Fonts
 
 ## Acknowledges
+- Fabulous ESP32 HUB75 LED MATRIX PANEL DMA Display library: https://github.com/mrcodetastic/ESP32-HUB75-MatrixPanel-DMA
 - ESP32 Trinity Project from Brian Lough: https://github.com/witnessmenow/ESP32-Trinity
 - Fonts in the fonts folder: those are included for convienience; credits go to:
   - https://github.com/apparentlymart/ledpixels/blob/master/tom-thumb.bdf
@@ -71,3 +79,5 @@ This section contains Ideas and links to appropriate websites with projects whic
   - https://github.com/lubeda/EspHoMaTriXv2
 - The nice online editor for pixel art (like weather and coffee cup animation): https://www.piskelapp.com
 - Online converter for images to C++ code: https://javl.github.io/image2cpp/ (Hint: I was using following settings: Background color: Black, Invert image colors: Checked, Brightness / alpha threshold: 100, Draw mode: Horizontal - 2 bytes per pixel (565)).
+- Contributors (no specific order)
+  - disruptivepatternmaterial (https://github.com/disruptivepatternmaterial)
