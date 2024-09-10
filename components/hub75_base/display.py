@@ -56,4 +56,5 @@ async def to_code(config):
     cg.add_library("Wire", None)
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
+    #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)

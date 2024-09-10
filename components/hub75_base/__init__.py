@@ -72,25 +72,25 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_WIDTH, default=64): cv.positive_int,
             cv.Optional(CONF_HEIGHT, default=32): cv.positive_int,
             cv.Optional(CONF_CHAIN_LENGTH, default=1): cv.positive_int,
-            cv.Optional(CONF_BRIGHTNESS, default=50): cv.int_range(min=0, max=255),
-            cv.Optional(CONF_MIN_BRIGHTNESS, default=0): cv.uint8_t,
-            cv.Optional(CONF_MAX_BRIGHTNESS, default=100): cv.uint8_t,            
+            cv.Optional(CONF_BRIGHTNESS, default=250): cv.int_range(min=0, max=255),
+            cv.Optional(CONF_MIN_BRIGHTNESS, default=100): cv.uint8_t,
+            cv.Optional(CONF_MAX_BRIGHTNESS, default=255): cv.uint8_t,            
             cv.Optional(
                 CONF_UPDATE_INTERVAL, default="16ms"
             ): cv.positive_time_period_milliseconds,
 
             cv.Optional(CONF_PIN_R1, default=25): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_G1, default=26): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_B1, default=27): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_G1, default=27): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_B1, default=26): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_R2, default=14): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_G2, default=12): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_B2, default=13): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_G2, default=13): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_B2, default=12): pins.gpio_output_pin_schema,
 
             cv.Optional(CONF_PIN_A, default=23): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_B, default=19): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_C, default=5): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_D, default=17): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_E): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_E, default=-1): pins.gpio_output_pin_schema,
 
             cv.Optional(CONF_PIN_LAT, default=4): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_OE, default=15): pins.gpio_output_pin_schema,
@@ -137,6 +137,7 @@ async def setup_hub75_display(var, config):
 
     LAT_pin = await cg.gpio_pin_expression(config[CONF_PIN_LAT])
     OE_pin = await cg.gpio_pin_expression(config[CONF_PIN_OE])
+    
     CLK_pin = await cg.gpio_pin_expression(config[CONF_PIN_CLK])
 
     cg.add(var.set_pins(R1_pin, G1_pin, B1_pin, R2_pin, G2_pin, B2_pin,
@@ -170,4 +171,4 @@ async def setup_hub75_display(var, config):
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
     #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "3.0.11")
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)

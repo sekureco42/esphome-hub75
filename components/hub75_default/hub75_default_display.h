@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esphome.h"
+using namespace esphome;
 #include "esphome/core/component.h"
 #include "esphome/components/hub75_base/hub75_display.h"
 
@@ -14,6 +15,7 @@ namespace esphome {
       public:
         void setup() override;
         void update() override;
+        void dump_config() override;
         void set_writer(const hub75defaultdisplay_writer_t &writer) { this->writer_ = writer; }
       protected:
         optional<hub75defaultdisplay_writer_t> writer_;
