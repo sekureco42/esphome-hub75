@@ -20,6 +20,8 @@ To start with ESPHome you need a working environment. With following steps you g
 * `source venv/bin/activate`
 * `pip3 install esphome`
 
+Please note that minimum required version of ESPHome is `2023.12.0` (the original component was written for older versions of ESPHome - but later not tested any more)!
+
 ### ESPHome Component
 This section describes the installation of this component. As a pre-requisite Home Assistant and ESPHome must be already installed. Consult corresponding projects for further information how to install those products and make sure that they are working correctly in your environment before you continue.
 

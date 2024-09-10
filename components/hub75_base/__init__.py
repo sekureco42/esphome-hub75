@@ -45,7 +45,7 @@ CONF_CLOCK_PHASE = 'clock_phase'
 
 hub75_base_ns = cg.esphome_ns.namespace("hub75_base")
 HUB75Display = hub75_base_ns.class_(
-    "HUB75Display", cg.PollingComponent, display.DisplayBuffer)
+    "HUB75Display", cg.PollingComponent, display.Display)
 
 shift_driver = cg.global_ns.namespace("HUB75_I2S_CFG").enum("shift_driver")
 DRIVERS = {
@@ -72,9 +72,9 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_WIDTH, default=64): cv.positive_int,
             cv.Optional(CONF_HEIGHT, default=32): cv.positive_int,
             cv.Optional(CONF_CHAIN_LENGTH, default=1): cv.positive_int,
-            cv.Optional(CONF_BRIGHTNESS, default=50): cv.int_range(min=0, max=255),
+            cv.Optional(CONF_BRIGHTNESS, default=100): cv.int_range(min=0, max=255),
             cv.Optional(CONF_MIN_BRIGHTNESS, default=0): cv.uint8_t,
-            cv.Optional(CONF_MAX_BRIGHTNESS, default=100): cv.uint8_t,            
+            cv.Optional(CONF_MAX_BRIGHTNESS, default=255): cv.uint8_t,
             cv.Optional(
                 CONF_UPDATE_INTERVAL, default="16ms"
             ): cv.positive_time_period_milliseconds,

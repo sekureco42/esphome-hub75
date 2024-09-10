@@ -39,7 +39,7 @@ const Color backgroundColor             = COLOR_BLACK;
 class HUB75Display;
 
 #if ESPHOME_VERSION_CODE >= VERSION_CODE(2023, 12, 0)
-class HUB75Display : public display::DisplayBuffer {
+class HUB75Display : public display::Display {
 #else
 class HUB75Display : public PollingComponent, public display::DisplayBuffer {
 #endif  // VERSION_CODE(2023, 12, 0)
@@ -94,8 +94,11 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
 
     display::DisplayType get_display_type() override { return display::DisplayType::DISPLAY_TYPE_COLOR; }
 
+    // START: override methods from base class Display to use native performant functions of HUB75 DMA display
     void fill(Color color) override;
+    void clear() { this->dma_display_->clearScreen(); };
     void filled_rectangle(int x1, int y1, int width, int height, Color color = display::COLOR_ON);
+    // END: override methods from base class Display to use native performant functions of HUB75 DMA display
 
     void set_state(bool state) { this->enabled_ = state; };
     void set_brightness(uint8_t brightness);
@@ -141,7 +144,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
 
     int get_width_internal() override { return width_; };
     int get_height_internal() override { return height_; };
-    void draw_absolute_pixel_internal(int x, int y, Color color) override;
+    void draw_pixel_at(int x, int y, Color color) override;
     virtual void update_();
     virtual void start_screen_();
     void update_brightness_(unsigned long timeInMillis);

@@ -104,12 +104,12 @@ namespace esphome
 
       switch (dma_display_->getCfg().i2sspeed)
       {
-      // case HUB75_I2S_CFG::clk_speed::HZ_8M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M (is the same like HZ_10M)");
-      //   break;
-      // case HUB75_I2S_CFG::clk_speed::HZ_16M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_16M (is the same like HZ_15M)");
-      //   break;
+      case HUB75_I2S_CFG::clk_speed::HZ_8M:
+        ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M (is the same like HZ_10M)");
+        break;
+      case HUB75_I2S_CFG::clk_speed::HZ_16M:
+        ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_16M (is the same like HZ_15M)");
+        break;
       case HUB75_I2S_CFG::clk_speed::HZ_20M:
         ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_20M");
         break;
@@ -144,7 +144,7 @@ namespace esphome
       } 
     }
 
-    void HOT HUB75Display::draw_absolute_pixel_internal(int x, int y, Color color) {
+    void HOT HUB75Display::draw_pixel_at(int x, int y, Color color) {
       // Reject invalid pixels
       if (x >= this->get_width_internal() || x < 0 || y >= this->get_height_internal() || y < 0)
         return;
@@ -185,7 +185,7 @@ namespace esphome
 
       this->dma_display_->setCursor(0, 16+8);
       this->dma_display_->setTextColor(display::ColorUtil::color_to_565(hub75_base::COLOR_BLUE_LIGHTER));
-      this->dma_display_->print("(c) 2023 by");
+      this->dma_display_->print("(c) 2024 by");
       this->dma_display_->setFont();
 
       this->dma_display_->setCursor(0, 24);
