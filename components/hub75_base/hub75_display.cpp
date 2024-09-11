@@ -211,15 +211,18 @@ namespace esphome
         if (brightness_ != brightness_destination_) {
           // 0 -> 255 256/20
           if (brightness_destination_ > brightness_) {
-            brightness_ = brightness_ + 2;
-            if (brightness_ > brightness_destination_) {
+            if (brightness_ + 2 > brightness_destination_ || brightness_ + 2 > 255) {
               brightness_ = brightness_destination_;
+            } else {
+              brightness_ = brightness_ + 2;
             }
           }
+
           if (brightness_destination_ < brightness_) {
-            brightness_ = brightness_ - 2;
-            if (brightness_ < brightness_destination_) {
+            if (brightness_ < 2 || brightness_ - 2 < brightness_destination_) {
               brightness_ = brightness_destination_;
+            } else {
+              brightness_ = brightness_ - 2;
             }
           }
 
