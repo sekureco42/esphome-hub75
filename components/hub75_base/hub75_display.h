@@ -1,6 +1,7 @@
 #pragma once
 
 #include "esphome.h"
+using namespace esphome;
 #include "esphome/core/hal.h"
 #include "esphome/core/log.h"
 #include "esphome/core/component.h"
@@ -38,9 +39,8 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
 #endif  // VERSION_CODE(2023, 12, 0)
   public:
     virtual void setup();
-    void dump_config() override;
     virtual void update();
-
+    virtual void dump_config();
     void set_panel_height(int panel_height) { this->height_ = panel_height; }
     void set_panel_width(int panel_width) { this->width_ = panel_width; }
     void set_chain_length(int chain_length) { this->chain_length_ = chain_length; }
@@ -50,7 +50,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
       int8_t e = -1;
       if (E_pin != NULL)
         e = E_pin->get_pin();
-
+      
       this->pins_ = {
           static_cast<int8_t>(R1_pin->get_pin()),
           static_cast<int8_t>(G1_pin->get_pin()),
@@ -66,6 +66,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
           static_cast<int8_t>(LAT_pin->get_pin()),
           static_cast<int8_t>(OE_pin->get_pin()),
           static_cast<int8_t>(CLK_pin->get_pin())};
+
     }
 
     void set_driver(HUB75_I2S_CFG::shift_driver driver) {
@@ -95,7 +96,6 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     void set_brightness(uint8_t brightness, bool with_fade);
     void set_min_brightness(uint8_t min_brightness) { this->min_brightness_ = min_brightness; }
     void set_max_brightness(uint8_t max_brightness) { this->max_brightness_ = max_brightness; }
-
     MatrixPanel_I2S_DMA* get_display() { return this->dma_display_; }
 
     void set_time(time::RealTimeClock *time);
@@ -104,7 +104,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     // Home Assistant Service Call Definition
     void on_set_brightness(int brightness);
 
-  protected:
+  //protected:
     std::string display_name_ = "HUB75";
     MatrixPanel_I2S_DMA *dma_display_{nullptr};
     HUB75_I2S_CFG::i2s_pins pins_;
@@ -120,7 +120,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     bool clock_phase_{false};
 
     uint8_t chain_length_{1};
-    uint8_t brightness_{0};
+    uint8_t brightness_{250};
     uint8_t min_brightness_{0};
     uint8_t max_brightness_{255};
     uint8_t brightness_destination_{0};
@@ -138,6 +138,8 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     virtual void update_();
     virtual void start_screen_();
     void update_brightness_(unsigned long timeInMillis);
+
+    uint8_t get_brightness() { return brightness_; };
 
     time::RealTimeClock *time_;
 

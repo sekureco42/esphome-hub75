@@ -6,12 +6,20 @@ async def to_code(config):
     cg.add(var.set_chain_length(config[CONF_CHAIN_LENGTH]))
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
 
-    R1_pin = await cg.gpio_pin_expression(config[CONF_PIN_R1])
-    G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
-    B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+    if config[CONF_RGB_ORDER] == 'RGB':
+        G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
+        B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+        G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
+        B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+    else:
+        G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+        B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
+        G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+        B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
+
     R2_pin = await cg.gpio_pin_expression(config[CONF_PIN_R2])
-    G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
-    B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+    R1_pin = await cg.gpio_pin_expression(config[CONF_PIN_R1])
+
 
     A_pin = await cg.gpio_pin_expression(config[CONF_PIN_A])
     B_pin = await cg.gpio_pin_expression(config[CONF_PIN_B])
@@ -28,8 +36,9 @@ async def to_code(config):
     CLK_pin = await cg.gpio_pin_expression(config[CONF_PIN_CLK])
 
     cg.add(var.set_pins(R1_pin, G1_pin, B1_pin, R2_pin, G2_pin, B2_pin,
-           A_pin, B_pin, C_pin, D_pin, E_pin, LAT_pin, OE_pin, CLK_pin))
+            A_pin, B_pin, C_pin, D_pin, E_pin, LAT_pin, OE_pin, CLK_pin))
 
+        
     if CONF_CHIPSET in config:
         cg.add(var.set_driver(config[CONF_CHIPSET]))
 
@@ -56,4 +65,5 @@ async def to_code(config):
     cg.add_library("Wire", None)
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
+    #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)

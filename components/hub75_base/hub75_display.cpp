@@ -1,11 +1,7 @@
 #include "esphome.h"
+using namespace esphome;
 #include "hub75_display.h"
 #include <Fonts/TomThumb.h>
-
-// The esphome ESP_LOGx macros expand to reference esp_log_printf_, but do so
-// without using its namespace. https://github.com/esphome/issues/issues/3196
-// The workaround is to pull that particular function into this namespace.
-using esphome::esp_log_printf_;
 
 namespace esphome
 {
@@ -71,7 +67,6 @@ namespace esphome
 
     void HUB75Display::dump_config() {
       ESP_LOGCONFIG(TAG, "HUB75Display:");
-
       ESP_LOGCONFIG(TAG, "  Display Width:    %u", this->width_);
       ESP_LOGCONFIG(TAG, "  Display Height:   %u", this->height_);
       ESP_LOGCONFIG(TAG, "  Brightness:       %u", this->brightness_);
@@ -111,15 +106,15 @@ namespace esphome
       // Log i2speed
       switch (dma_display_->getCfg().i2sspeed)
       {
-      // case HUB75_I2S_CFG::clk_speed::HZ_8M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M");
-      //   break;
+      //case HUB75_I2S_CFG::clk_speed::HZ_8M:
+      //  ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_8M");
+      //  break;
       case HUB75_I2S_CFG::clk_speed::HZ_10M:
         ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_10M");
         break;
-      // case HUB75_I2S_CFG::clk_speed::HZ_15M:
-      //   ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_15M");
-      //   break;
+      //case HUB75_I2S_CFG::clk_speed::HZ_15M:
+      //  ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_15M");
+      //  break;
       case HUB75_I2S_CFG::clk_speed::HZ_20M:
         ESP_LOGCONFIG(TAG, "  I2SSpeed: HZ_20M");
         break;
@@ -135,6 +130,10 @@ namespace esphome
     void HUB75Display::set_brightness(uint8_t brightness) {
       this->set_brightness(brightness, false);
     }
+
+    //uint8_t HUB75Display::get_brightness() {
+    //  return this->brightness_;
+    //}
 
     void HUB75Display::set_brightness(uint8_t brightness, bool with_fade) {
       if (brightness <= this->min_brightness_) {
@@ -176,7 +175,7 @@ namespace esphome
     void HUB75Display::update_() { 
       this->dma_display_->fillRect(0, 8, 64, 7, display::ColorUtil::color_to_565(backgroundColor));
       this->dma_display_->setCursor(0, 8);
-      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(myRED));
+      this->dma_display_->setTextColor(display::ColorUtil::color_to_565(myWHITE));
 
       ESPTime now = this->time_->now();
       if (now.is_valid()) {

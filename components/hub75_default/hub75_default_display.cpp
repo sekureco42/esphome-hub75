@@ -1,10 +1,6 @@
 #include "esphome.h"
+using namespace esphome;
 #include "esphome/components/hub75_default/hub75_default_display.h"
-
-// The esphome ESP_LOGx macros expand to reference esp_log_printf_, but do so
-// without using its namespace. https://github.com/esphome/issues/issues/3196
-// The workaround is to pull that particular function into this namespace.
-using esphome::esp_log_printf_;
 
 namespace esphome {
   namespace hub75_default {
@@ -19,6 +15,12 @@ namespace esphome {
       ESP_LOGI(TAG, "Finished Setup");
     }
 
+    void HUB75DefaultDisplay::dump_config() {
+      ESP_LOGCONFIG(TAG, "Dumping Config...");
+      HUB75Display::dump_config();
+      ESP_LOGI(TAG, "Finished Dumping");
+    }
+    
     void HUB75DefaultDisplay::update() {
       HUB75Display::update();
 
@@ -45,6 +47,7 @@ namespace esphome {
       while (is_clipping()) {
         end_clipping();
       }
+
     }
 
     void HUB75DefaultDisplay::update_() { 

@@ -17,7 +17,8 @@ from esphome.const import (
     CONF_PIN_D,
     CONF_CHIPSET,
     CONF_MIN_BRIGHTNESS,
-    CONF_MAX_BRIGHTNESS,    
+    CONF_MAX_BRIGHTNESS,  
+    CONF_RGB_ORDER,  
 )
 from esphome.const import __version__ as ESPHOME_VERSION
 
@@ -72,9 +73,9 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_WIDTH, default=64): cv.positive_int,
             cv.Optional(CONF_HEIGHT, default=32): cv.positive_int,
             cv.Optional(CONF_CHAIN_LENGTH, default=1): cv.positive_int,
-            cv.Optional(CONF_BRIGHTNESS, default=50): cv.int_range(min=0, max=255),
-            cv.Optional(CONF_MIN_BRIGHTNESS, default=0): cv.uint8_t,
-            cv.Optional(CONF_MAX_BRIGHTNESS, default=100): cv.uint8_t,            
+            cv.Optional(CONF_BRIGHTNESS, default=250): cv.int_range(min=0, max=255),
+            cv.Optional(CONF_MIN_BRIGHTNESS, default=100): cv.uint8_t,
+            cv.Optional(CONF_MAX_BRIGHTNESS, default=255): cv.uint8_t,            
             cv.Optional(
                 CONF_UPDATE_INTERVAL, default="16ms"
             ): cv.positive_time_period_milliseconds,
@@ -90,11 +91,12 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_PIN_B, default=19): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_C, default=5): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_D, default=17): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_E): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_E, default=-1): pins.gpio_output_pin_schema,
 
             cv.Optional(CONF_PIN_LAT, default=4): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_OE, default=15): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_CLK, default=16): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_RGB_ORDER, default="RGB"): cv.string,
 
             cv.Optional(CONF_CHIPSET): cv.enum(
                 DRIVERS, upper=True, space="_"
@@ -119,11 +121,20 @@ async def setup_hub75_display(var, config):
     cg.add(var.set_max_brightness(config[CONF_MAX_BRIGHTNESS]))
 
     R1_pin = await cg.gpio_pin_expression(config[CONF_PIN_R1])
-    G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
-    B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+
+    if config[CONF_RGB_ORDER] == 'RGB':
+        G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
+        B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+        G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
+        B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+    else:
+        G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_B1])
+        B1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
+        G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+        B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
+
     R2_pin = await cg.gpio_pin_expression(config[CONF_PIN_R2])
-    G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
-    B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+
 
     A_pin = await cg.gpio_pin_expression(config[CONF_PIN_A])
     B_pin = await cg.gpio_pin_expression(config[CONF_PIN_B])
@@ -137,10 +148,12 @@ async def setup_hub75_display(var, config):
 
     LAT_pin = await cg.gpio_pin_expression(config[CONF_PIN_LAT])
     OE_pin = await cg.gpio_pin_expression(config[CONF_PIN_OE])
+    
     CLK_pin = await cg.gpio_pin_expression(config[CONF_PIN_CLK])
-
+    
     cg.add(var.set_pins(R1_pin, G1_pin, B1_pin, R2_pin, G2_pin, B2_pin,
-           A_pin, B_pin, C_pin, D_pin, E_pin, LAT_pin, OE_pin, CLK_pin))
+            A_pin, B_pin, C_pin, D_pin, E_pin, LAT_pin, OE_pin, CLK_pin))
+
 
     if CONF_CHIPSET in config:
         cg.add(var.set_driver(config[CONF_CHIPSET]))
@@ -170,4 +183,4 @@ async def setup_hub75_display(var, config):
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
     #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
-    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "3.0.11")
+    cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
