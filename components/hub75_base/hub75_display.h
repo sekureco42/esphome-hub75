@@ -41,6 +41,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     virtual void setup();
     virtual void update();
     virtual void dump_config();
+
     void set_panel_height(int panel_height) { this->height_ = panel_height; }
     void set_panel_width(int panel_width) { this->width_ = panel_width; }
     void set_chain_length(int chain_length) { this->chain_length_ = chain_length; }

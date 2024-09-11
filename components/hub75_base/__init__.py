@@ -81,11 +81,11 @@ HUB75_SCHEMA = (
             ): cv.positive_time_period_milliseconds,
 
             cv.Optional(CONF_PIN_R1, default=25): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_G1, default=26): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_B1, default=27): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_G1, default=27): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_B1, default=26): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_R2, default=14): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_G2, default=12): pins.gpio_output_pin_schema,
-            cv.Optional(CONF_PIN_B2, default=13): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_G2, default=13): pins.gpio_output_pin_schema,
+            cv.Optional(CONF_PIN_B2, default=12): pins.gpio_output_pin_schema,
 
             cv.Optional(CONF_PIN_A, default=23): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_B, default=19): pins.gpio_output_pin_schema,

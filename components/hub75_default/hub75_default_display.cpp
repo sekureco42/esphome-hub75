@@ -21,6 +21,7 @@ namespace esphome {
       ESP_LOGI(TAG, "Finished Dumping");
     }
     
+
     void HUB75DefaultDisplay::update() {
       HUB75Display::update();
 

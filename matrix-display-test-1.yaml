@@ -1,0 +1,224 @@
+substitutions:
+  devicename: MatrixClockDemo
+  hostname: matrix-clock-demo
+  friendly_name: Matrix Display Demo
+  location: Inside
+  floor: 1stfloor
+  room: Test
+  sensor_interval: 60s
+
+# Add own developed components to search path of esphome
+external_components:
+  - source:
+      type: local
+      path: custom_components/esphome-hub75/components
+ 
+esphome:
+  name: ${hostname}
+  friendly_name: ${friendly_name}
+  comment: Testing Matrix Trinity
+  area: ${room}
+
+esp32:
+  board: esp32dev
+
+logger:
+  level: DEBUG
+
+<<: !include common/api.yaml
+<<: !include common/ota.yaml
+#<<: !include common/logger.yaml
+<<: !include common/web_server.yaml
+<<: !include common/wifi.yaml
+<<: !include common/time.yaml
+<<: !include common/packages.yaml
+
+api:
+  encryption:
+    key: !secret api_key_1
+  reboot_timeout: 5min
+
+
+text_sensor:
+  - platform: template
+    id: scroll_text
+    name: Scrolling Text
+  - platform: homeassistant
+    id: clock_scroll_text
+    entity_id: sensor.clock_scrolling_text
+
+sensor:
+  - platform: uptime
+    name: "Uptime Sensor"
+    update_interval: 60s
+
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+
+  - platform: homeassistant
+    id: outside_average_temperature
+    entity_id: sensor.outside_average_temperature
+    unit_of_measurement: "°F"
+    icon: "mdi:thermometer"
+    device_class: "temperature"
+    state_class: "measurement"
+    internal: true
+    accuracy_decimals: 0
+
+  - platform: homeassistant
+    id: outside_average_humid
+    entity_id: sensor.outside_average_humidity
+    unit_of_measurement: "°F"
+    icon: "mdi:thermometer"
+    device_class: "humidity"
+    state_class: "measurement"
+    internal: true
+    accuracy_decimals: 0
+
+  - platform: homeassistant
+    id: outside_average_aqi
+    entity_id: sensor.outside_average_aqi_pm_2_5
+    device_class: "aqi"
+    state_class: "measurement"
+    internal: true
+    accuracy_decimals: 0
+
+  - platform: homeassistant
+    id: household_night_mode
+    entity_id: binary_sensor.night_light_mode
+    internal: true
+    on_value:
+      then:
+        - lambda: |-
+            if (x == 'on') {
+              id(night_mode).publish_state(true);
+            } else {
+              id(night_mode).publish_state(false);
+            }
+            
+
+# Define assets we need for using on the display
+font:
+  - file: "fonts/clock26.bdf"
+    id: clock2
+  - file: "fonts/6x12.bdf"
+    id: temp2
+
+# Display and pages configuration  
+display:
+  platform: hub75_default
+  id: my_trinity_display
+  auto_clear_enabled: true
+  #pin_e: GPIO18
+  brightness: 250
+  max_brightness: 255
+  min_brightness: 0
+  #update_interval: 5s
+  pages:
+    - id: page1
+      lambda: |-
+        it.strftime(32, -5, id(clock2), id(COLOR_CSS_CLOCK), TextAlign::TOP_CENTER, "%H:%M", id(esptime).now());
+        it.printf(2, 20, id(temp2), id(COLOR_CSS_CADETBLUE), TextAlign::TOP_LEFT, "%.0f°F", id(outside_average_temperature).state);
+        it.printf(26, 20, id(temp2), id(COLOR_CSS_CADETBLUE), TextAlign::TOP_LEFT, "%.0f%%", id(outside_average_humid).state);
+        it.rectangle(0, 0, 64, 32, id(COLOR_CSS_DARKOLIVEGREEN));
+        it.line(1,1,5,1,id(COLOR_CSS_DARKORANGE));
+    - id: page2
+      lambda: |-
+        it.strftime(32, -5, id(clock2), id(COLOR_CSS_RED), TextAlign::TOP_CENTER, "%H:%M", id(esptime).now());
+        it.printf(2, 20, id(temp2), id(COLOR_CSS_RED), TextAlign::TOP_LEFT, "%.0f°F", id(outside_average_temperature).state);
+        it.printf(26, 20, id(temp2), id(COLOR_CSS_RED), TextAlign::TOP_LEFT, "%.0f%%", id(outside_average_humid).state);
+        it.rectangle(0, 0, 64, 32, id(COLOR_CSS_RED));
+        it.line(1,1,5,1,id(COLOR_CSS_RED));
+    - id: page3
+      lambda: |-
+        it.strftime(32, -5, id(clock2), id(COLOR_CSS_CLOCK), TextAlign::TOP_CENTER, "%H:%M", id(esptime).now());
+        it.start_clipping(0, 20, 64, 32);
+          //std::string printout=id(clock_scroll_text).state.c_str();
+          std::string printout="James Earl Jones, Broadway Star and Voice of Darth Vader, Dies at 93";
+          int clength = printout.length();
+          id(scroll_lenght) = clength * 6;
+          it.print(id(scroll_x), 20, id(temp2), id(COLOR_CSS_CLOCK), printout.c_str());
+        it.end_clipping(); 
+        it.rectangle(0, 0, 64, 32, id(COLOR_CSS_DARKOLIVEGREEN));
+        it.line(1,1,5,1,id(COLOR_CSS_DARKORANGE));
+    - id: page4
+      lambda: |-
+        it.strftime(32, -5, id(clock2), id(COLOR_CSS_RED), TextAlign::TOP_CENTER, "%H:%M", id(esptime).now());
+        it.start_clipping(0, 20, 64, 32);
+          //std::string printout=id(clock_scroll_text).state.c_str();
+          std::string printout="James Earl Jones, Broadway Star and Voice of Darth Vader, Dies at 93";
+          int clength = printout.length();
+          id(scroll_lenght) = clength * 6;
+          it.print(id(scroll_x), 20, id(temp2), id(COLOR_CSS_RED), printout.c_str());
+        it.end_clipping(); 
+        it.rectangle(0, 0, 64, 32, id(COLOR_CSS_RED));
+        it.line(1,1,5,1,id(COLOR_CSS_RED));
+
+interval:
+  - interval: 500ms
+    then:
+      - component.update: my_trinity_display
+  - interval: 100ms
+    then:
+      if:
+        condition:
+          lambda: |-
+            return id(my_trinity_display).get_active_page() == id(page4) || id(my_trinity_display).get_active_page() == id(page3);
+        then:
+          - component.update: my_trinity_display
+          - lambda: |-
+              if (id(scroll_x) < -(id(scroll_lenght))) {
+                // Start at right side of clipping area
+                id(scroll_x) = 64; 
+              }
+              else  {
+                id(scroll_x) -= 2;
+              }
+
+switch:
+  - platform: template
+    id: night_mode
+    name: Night Mode
+    internal: true
+    optimistic: true
+    lambda: |-
+      if (id(night_mode).state) {
+        return true;
+      } else {
+        return false;
+      }    
+    turn_on_action:
+      - display.page.show: page3
+      - component.update: my_trinity_display
+    turn_off_action:
+      - display.page.show: page4
+      - component.update: my_trinity_display
+
+button:
+  - platform: restart
+    name: Restart
+
+number:
+  - platform: template
+    id: brightness
+    name: Brightness
+    min_value: 0
+    max_value: 255
+    update_interval: 1s
+    step: 5
+    set_action: 
+      then:
+        - lambda: |-
+            id(my_trinity_display).set_brightness(x);
+    lambda: return(id(brightness).state);
+
+globals:
+   - id: scroll_x
+     type: int
+     restore_value: no
+     initial_value: '0'
+   - id: scroll_lenght
+     type: int
+     restore_value: no
+     initial_value: '0'
