@@ -54,12 +54,52 @@ This configuration file shows the following features:
 - Uses timer to switch between pages
 - Use of the Trinity onboard touch buttons (T8: `t8_touchpad`, T9: `t9_touchpad`). You could switch through pages of the display
 
+### Available config keys
+The component supports following config keys in the yaml file (all shown values are default values, keys from base class display not shown):
+```
+display:
+  platform: hub75_default
+  id: my_trinity_display
+  width: 64
+  height: 32
+  chain_length: 1
+  brightness: 100
+  min_brightness: 0
+  max_brightness: 255
+  update_interval: 16ms
+  pin_r1: 25
+  pin_g1: 26
+  pin_b1: 27
+  pin_r2: 14
+  pin_g2: 12
+  pin_b2: 13
+  pin_a: 23
+  pin_b: 19
+  pin_c: 5
+  pin_d: 17
+  pin_e: -1
+  pin_latch: 4
+  pin_oe: 15
+  pin_clk: 16
+  rgb_order: "RGB"
+  chipset: "SHIFTREG"
+  i2sspeed: "HZ_8M"
+  latch_blanking: 1
+  clock_phase: False
+```
+
 ## Remarks
 ### Maximal refresh rate
 With the config file `hub75default_minimal.yaml` you can reach up to `141` frames per second (by setting `update_interval: 5ms` in the display section). This is possible thanks to the new `ESP32 HUB75 LED MATRIX PANEL DMA Display` library version `3.x`. The old one (before `2.0.7` was used) reached only `107` frames per second.
 
 Eventhough you could achieve such a high framerate you should only "use" the rate you need. By default the value is `16ms` (leads to `63` frames per second).
 
+### Panel Color Order
+Typical HUB75 panel are in `RGB` (default setting) or `RBG` order. To simplify setup of such panel instead of assigning the proper pins you could also try to set the following key:
+```
+rgb_order: "RBG"
+```
+This will switch internally the pin assignments accordingly.
 
 ## Additional Ideas
 This section contains Ideas and links to appropriate websites with projects which could be also interesting for you in the context of this display.

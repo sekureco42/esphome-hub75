@@ -17,7 +17,8 @@ from esphome.const import (
     CONF_PIN_D,
     CONF_CHIPSET,
     CONF_MIN_BRIGHTNESS,
-    CONF_MAX_BRIGHTNESS,    
+    CONF_MAX_BRIGHTNESS,
+    CONF_RGB_ORDER,
 )
 from esphome.const import __version__ as ESPHOME_VERSION
 
@@ -65,6 +66,11 @@ CLOCK_SPEEDS = {
     "HZ_20M": clk_speed.HZ_20M
 }
 
+RGB_ORDERS = [
+    "RGB",
+    "RBG",
+]
+
 HUB75_SCHEMA = (
     display.FULL_DISPLAY_SCHEMA.extend(
         {
@@ -96,6 +102,10 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_PIN_OE, default=15): pins.gpio_output_pin_schema,
             cv.Optional(CONF_PIN_CLK, default=16): pins.gpio_output_pin_schema,
 
+            cv.Optional(CONF_RGB_ORDER): cv.one_of(
+                *RGB_ORDERS, upper=True
+            ),
+
             cv.Optional(CONF_CHIPSET): cv.enum(
                 DRIVERS, upper=True, space="_"
             ),
@@ -106,6 +116,7 @@ HUB75_SCHEMA = (
 
             cv.Optional(CONF_LATCH_BLANKING): cv.positive_int,
             cv.Optional(CONF_CLOCK_PHASE, default=False): cv.boolean,
+
         }
     )
 )
@@ -124,6 +135,15 @@ async def setup_hub75_display(var, config):
     R2_pin = await cg.gpio_pin_expression(config[CONF_PIN_R2])
     G2_pin = await cg.gpio_pin_expression(config[CONF_PIN_G2])
     B2_pin = await cg.gpio_pin_expression(config[CONF_PIN_B2])
+
+    if CONF_RGB_ORDER in config:
+        if config[CONF_RGB_ORDER] == 'RBG':
+            saved_pin = G1_pin
+            G1_pin = B1_pin
+            B1_pin = saved_pin
+            saved_pin = G2_pin
+            G2_pin = B2_pin
+            B2_pin = saved_pin
 
     A_pin = await cg.gpio_pin_expression(config[CONF_PIN_A])
     B_pin = await cg.gpio_pin_expression(config[CONF_PIN_B])
@@ -169,4 +189,3 @@ async def setup_hub75_display(var, config):
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
     cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
-
