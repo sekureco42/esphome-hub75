@@ -25,6 +25,7 @@ api:
     key: !secret esphome_api_key
 
 ota:
+  platform: esphome
   password: !secret esphome_ota_pass
 
 sensor:

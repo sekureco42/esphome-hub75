@@ -46,7 +46,7 @@ CONF_CLOCK_PHASE = 'clock_phase'
 
 hub75_base_ns = cg.esphome_ns.namespace("hub75_base")
 HUB75Display = hub75_base_ns.class_(
-    "HUB75Display", cg.PollingComponent, display.DisplayBuffer)
+    "HUB75Display", cg.PollingComponent, display.Display)
 
 shift_driver = cg.global_ns.namespace("HUB75_I2S_CFG").enum("shift_driver")
 DRIVERS = {
@@ -73,9 +73,9 @@ HUB75_SCHEMA = (
             cv.Optional(CONF_WIDTH, default=64): cv.positive_int,
             cv.Optional(CONF_HEIGHT, default=32): cv.positive_int,
             cv.Optional(CONF_CHAIN_LENGTH, default=1): cv.positive_int,
-            cv.Optional(CONF_BRIGHTNESS, default=250): cv.int_range(min=0, max=255),
-            cv.Optional(CONF_MIN_BRIGHTNESS, default=100): cv.uint8_t,
-            cv.Optional(CONF_MAX_BRIGHTNESS, default=255): cv.uint8_t,            
+            cv.Optional(CONF_BRIGHTNESS, default=100): cv.int_range(min=0, max=255),
+            cv.Optional(CONF_MIN_BRIGHTNESS, default=0): cv.uint8_t,
+            cv.Optional(CONF_MAX_BRIGHTNESS, default=255): cv.uint8_t,
             cv.Optional(
                 CONF_UPDATE_INTERVAL, default="16ms"
             ): cv.positive_time_period_milliseconds,
@@ -170,7 +170,6 @@ async def setup_hub75_display(var, config):
     if cv.Version.parse(ESPHOME_VERSION) < cv.Version.parse("2023.12.0"):
         await cg.register_component(var, config)
     await display.register_display(var, config)
-    #await light.register_light(var, config)
 
     if CONF_LAMBDA in config:
         lambda_ = await cg.process_lambda(
@@ -182,5 +181,5 @@ async def setup_hub75_display(var, config):
     cg.add_library("Wire", None)
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
-    #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
     cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
+

@@ -5,6 +5,8 @@ async def to_code(config):
     cg.add(var.set_panel_height(config[CONF_HEIGHT]))
     cg.add(var.set_chain_length(config[CONF_CHAIN_LENGTH]))
     cg.add(var.set_brightness(config[CONF_BRIGHTNESS]))
+    cg.add(var.set_min_brightness(config[CONF_MIN_BRIGHTNESS]))
+    cg.add(var.set_max_brightness(config[CONF_MAX_BRIGHTNESS]))
 
     if config[CONF_RGB_ORDER] == 'RGB':
         G1_pin = await cg.gpio_pin_expression(config[CONF_PIN_G1])
@@ -65,5 +67,4 @@ async def to_code(config):
     cg.add_library("Wire", None)
     cg.add_library("Adafruit BusIO", None)
     cg.add_library("Adafruit GFX Library", None)
-    #cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", "2.0.7")
     cg.add_library("ESP32 HUB75 LED MATRIX PANEL DMA Display", None)
