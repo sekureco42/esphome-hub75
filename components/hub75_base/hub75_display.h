@@ -138,7 +138,7 @@ class HUB75Display : public PollingComponent, public display::DisplayBuffer {
     uint8_t max_brightness_{255};
     uint8_t brightness_destination_{0};
     unsigned long _lastTime = millis();
-    uint8_t brightness_fade_speed_{50}; // Fixed delay of 20ms
+    uint8_t brightness_fade_speed_{100}; // Fixed delay of 20ms
 
     bool enabled_{true};
     uint16_t width_{64};
