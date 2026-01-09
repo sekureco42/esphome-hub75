@@ -97,9 +97,11 @@ namespace esphome
       case HUB75_I2S_CFG::shift_driver::MBI5124:
         ESP_LOGCONFIG(TAG, "  Driver: MBI5124");
         break;
+#if defined(SM5266P)
       case HUB75_I2S_CFG::shift_driver::SM5266P:
         ESP_LOGCONFIG(TAG, "  Driver: SM5266P");
         break;
+#endif
       }
 
       switch (dma_display_->getCfg().i2sspeed)
